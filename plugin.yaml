@@ -1,0 +1,7 @@
+name: "kubeconfig-cleanup"
+shortDesc: "clean up dead contexts"
+longDesc: "kubeconfig-cleanup will goes through kubeconfig file and helps clean up dead contexts, clusters, and users"
+command: "./cleanup"
+flags:
+  - name: "kubeconfig"
+    desc: "Path to the kubeconfig file"
