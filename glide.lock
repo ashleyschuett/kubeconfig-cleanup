@@ -1,6 +1,10 @@
-hash: 2ae8beab0ba96ab7da5afcd29de0379ba76a99fcb3c2601c53e7610b78f35f0e
-updated: 2018-06-27T20:27:01.198875931-04:00
+hash: 55fec13ae3a23a3e1e131be862fb77a72eee4a9277bdd604b000e710eabe9a50
+updated: 2018-07-01T11:32:54.664426126-04:00
 imports:
+- name: github.com/briandowns/spinner
+  version: 5b875a9171af19dbde37e70a8fcbe2ebd7285e05
+- name: github.com/fatih/color
+  version: 5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
 - name: github.com/gogo/protobuf
@@ -32,6 +36,10 @@ imports:
   version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/json-iterator/go
   version: 13f86432b882000a51c6e610c620974462691a97
+- name: github.com/mattn/go-colorable
+  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
+- name: github.com/mattn/go-isatty
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/spf13/pflag
   version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/crypto
@@ -42,11 +50,13 @@ imports:
   version: 1c05540f6879653db88113bc4a2b70aec4bd491f
   subpackages:
   - context
-  - context/ctxhttp
+  - html
+  - html/atom
   - http2
   - http2/hpack
   - idna
   - lex/httplex
+  - websocket
 - name: golang.org/x/sys
   version: 95c6576299259db960f6c5b9b69ea52422860fce
   subpackages:
@@ -105,7 +115,6 @@ imports:
   - pkg/api/errors
   - pkg/api/meta
   - pkg/api/resource
-  - pkg/apis/meta/internalversion
   - pkg/apis/meta/v1
   - pkg/apis/meta/v1/unstructured
   - pkg/apis/meta/v1beta1
@@ -194,11 +203,5 @@ imports:
 - name: k8s.io/kubernetes
   version: 03d97e0f8fc73d4fc89561d940259cf443b3ac7b
   subpackages:
-  - cmd/kubeadm/app/constants
-  - cmd/kubeadm/app/discovery/file
   - cmd/kubeadm/app/util/kubeconfig
-  - pkg/apis/core
-  - pkg/registry/core/service/allocator
-  - pkg/registry/core/service/ipallocator
-  - pkg/util/version
 testImports: []
