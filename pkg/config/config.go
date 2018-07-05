@@ -15,11 +15,13 @@ import (
 )
 
 type Manager struct {
-	Original  *clientcmdapi.Config
-	New       *clientcmdapi.Config
-	prompter  *prompter
-	path      string
-	workqueue *Stack
+	Original           *clientcmdapi.Config
+	New                *clientcmdapi.Config
+	prompter           *prompter
+	path               string
+	workqueue          chan ContextResult
+	totalContexts      int
+	contextedValidated int
 }
 
 func NewManager() *Manager {
@@ -30,14 +32,16 @@ func NewManager() *Manager {
 		os.Exit(1)
 	}
 
-	workqueue := NewStack(len(config.Contexts))
+	ch := make(chan ContextResult)
 
 	return &Manager{
 		config,
 		config.DeepCopy(),
 		NewPrompter(),
 		path,
-		workqueue,
+		ch,
+		len(config.Contexts),
+		0,
 	}
 }
 
@@ -55,8 +59,9 @@ func getKubeconfigPath() string {
 }
 
 func (m *Manager) Run() {
+
 	for id, context := range m.Original.Contexts {
-		go m.ValidateAndAddToWorkQueue(id, context)
+		go m.ValidateAndAddToWorkqueue(id, context)
 	}
 
 	m.runWorkqueue()
@@ -144,14 +149,7 @@ func (m *Manager) Finish() {
 	os.Exit(0)
 }
 
-func (m *Manager) ValidateAndAddToWorkQueue(id string, context *clientcmdapi.Context) {
-	valid, message := m.Validate(context)
-	n := m.workqueue.NewNode(id, message, valid, context)
-	m.workqueue.Push(n)
-}
-
 func (m *Manager) Validate(context *clientcmdapi.Context) (bool, string) {
-
 	// make request to server/healz
 	cluster := m.getContextsCluster(context)
 	configFromClusterInfo := kubeconfigutil.CreateBasic(
@@ -168,11 +166,11 @@ func (m *Manager) Validate(context *clientcmdapi.Context) (bool, string) {
 		if apierrors.IsForbidden(err) {
 			// If the request is unauthorized, the cluster admin has not granted access to the cluster info configmap for unauthenticated users
 			// In that case, trust the cluster admin and do not refresh the cluster-info credentials
-			return true, fmt.Sprintf("[discovery] Could not access the %s ConfigMap for refreshing the cluster-info information, but the TLS cert is valid so proceeding...\n", bootstrapapi.ConfigMapClusterInfo)
+			return true, fmt.Sprintf("[discovery] Could not access the %s ConfigMap for refreshing the cluster-info information, but the TLS cert is valid so proceeding...", bootstrapapi.ConfigMapClusterInfo)
 		}
 
-		return false, fmt.Sprintf("[discovery] Failed to validate the API Server's identity, will try again: [%v]\n", err)
+		return false, fmt.Sprintf("[discovery] Failed to validate the API Server's identity, will try again: [%v]", err)
 	}
 
-	return true, fmt.Sprintln("[discovery] Valid cluster associated with context")
+	return true, fmt.Sprintf("[discovery] Valid cluster associated with context")
 }
