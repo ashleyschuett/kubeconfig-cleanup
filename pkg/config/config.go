@@ -161,6 +161,9 @@ func (m *Manager) Validate(context *clientcmdapi.Context) (bool, string) {
 
 	configFromClusterInfo.AuthInfos[context.AuthInfo] = m.getContextsUser(context)
 	client, err := kubeconfigutil.ToClientSet(configFromClusterInfo)
+	if err != nil {
+		return false, fmt.Sprintf("error converting to clientset: %v", err)
+	}
 	_, err = client.CoreV1().ConfigMaps(metav1.NamespacePublic).Get(bootstrapapi.ConfigMapClusterInfo, metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsForbidden(err) {
