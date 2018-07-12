@@ -1,7 +1,7 @@
 # This is an example goreleaser.yaml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
 builds:
-- 
+-
   env:
     - CGO_ENABLED=0
   main: ./cleanup.go
@@ -13,8 +13,6 @@ archive:
     windows: Windows
     386: i386
     amd64: x86_64
-checksum:
-  name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
@@ -27,5 +25,5 @@ release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL.
   # github:
-  #   owner: embano1
+  #   owner: ashleyschuett
   #   name: kubeconfig-cleanup
