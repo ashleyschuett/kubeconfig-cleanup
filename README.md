@@ -8,7 +8,8 @@ A kubectl plugin to clean up your kubeconfig file
 ### Installation
 Add `kubeconfig-cleanup` to your `kubectl` plugins directory. For more information about how plugins are loaded, please see the [official documentation](https://kubernetes.io/docs/tasks/extend-kubectl/kubectl-plugins/).
 ```
-curl -LO https://github.com/ashleyschuett/kubeconfig-cleanup/releases/download/v1.0.1/cleanup && \
+export BINARY=kubeconfig-cleanup_1.0.1_Linux_x86_64.tar.gz
+curl -LO -o cleanup https://github.com/ashleyschuett/kubeconfig-cleanup/releases/download/v1.0.1/$BINARY && \
 curl -LO https://raw.githubusercontent.com/ashleyschuett/kubeconfig-cleanup/v1.0.1/plugin.yaml && \
 mkdir ~/.kube/plugins/kubeconfig-cleanup && mv cleanup plugin.yaml
 ```
